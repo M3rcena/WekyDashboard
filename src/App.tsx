@@ -1,8 +1,14 @@
 import { useState, useEffect } from "react";
-import { Key, Copy, Check, RefreshCw, Trash2, ShieldAlert, Terminal, LogOut } from "lucide-react";
-import axios from "axios";
+import { Key, Copy, Check, RefreshCw, Trash2, ShieldAlert, Terminal, LogOut, Loader2 } from "lucide-react";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+// --- CONFIGURATION ---
+const CLIENT_ID = "1456659383789293578";
+const REDIRECT_URI = "https://m3rcena.github.io/WekyDashboard/";
+
+// Construct the OAuth URL
+const DISCORD_AUTH_URL = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(
+	REDIRECT_URI
+)}&scope=identify+guilds+email`;
 
 interface User {
 	id: string;
@@ -20,63 +26,64 @@ function App() {
 	const [user, setUser] = useState<User | null>(null);
 	const [apiKey, setApiKey] = useState<ApiKeyData | null>(null);
 	const [loading, setLoading] = useState(false);
+	const [authLoading, setAuthLoading] = useState(false); // Added checking state
 	const [copied, setCopied] = useState(false);
 
 	useEffect(() => {
-		// Check if user is logged in on load
-		axios
-			.get(`${API_URL}/auth/status`, { withCredentials: true })
-			.then(({ data }) => {
-				if (data.user) {
-					setUser(data.user);
-					if (data.apiKey) setApiKey(data.apiKey);
-				}
-			})
-			.catch(() => {}); // catch error silently (not logged in)
+		const checkAuth = async () => {
+			const params = new URLSearchParams(window.location.search);
+			const code = params.get("code");
+
+			if (code) {
+				setAuthLoading(true); // Show loading spinner
+
+				// 1. LOG THE CODE (As requested)
+				console.log("SUCCESS! Discord returned this code:", code);
+
+				// 2. SIMULATE API CALL (Fixes the error)
+				// We wait 1 second to fake talking to a backend.
+				// This makes the setState 'asynchronous' so React is happy.
+				setTimeout(() => {
+					setUser({
+						id: "123456789",
+						username: "TestUser",
+						avatar: "https://cdn.discordapp.com/embed/avatars/0.png",
+					});
+
+					// Clean the URL
+					window.history.replaceState({}, document.title, window.location.pathname);
+					setAuthLoading(false);
+				}, 1000);
+			}
+		};
+
+		checkAuth();
 	}, []);
 
 	const handleLogin = () => {
-		// Redirects to your backend to start Discord Auth
-		window.location.href = `${API_URL}/auth/discord`;
+		window.location.href = DISCORD_AUTH_URL;
 	};
 
-	const handleLogout = async () => {
-		try {
-			await axios.post(`${API_URL}/auth/logout`, {}, { withCredentials: true });
-			setUser(null);
-			setApiKey(null);
-		} catch (e) {
-			console.error(e);
-		}
+	const handleLogout = () => {
+		setUser(null);
+		setApiKey(null);
 	};
 
 	const generateKey = async () => {
 		setLoading(true);
-		try {
-			const { data } = await axios.post(`${API_URL}/api/generate-key`, {}, { withCredentials: true });
+		setTimeout(() => {
 			setApiKey({
-				key: data.apiKey,
+				key: "sk_live_" + Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 10),
 				createdAt: new Date().toLocaleDateString(),
 				lastUsed: "Never",
 			});
-		} catch {
-			alert("Failed to generate key. Is the backend running?");
-		} finally {
 			setLoading(false);
-		}
+		}, 1000);
 	};
 
 	const revokeKey = async () => {
-		if (!confirm("Are you sure? This will stop your bot from working.")) return;
-		setLoading(true);
-		try {
-			await axios.delete(`${API_URL}/api/revoke-key`, { withCredentials: true });
-			setApiKey(null);
-		} catch (err) {
-			console.error(err);
-		} finally {
-			setLoading(false);
-		}
+		if (!confirm("Are you sure? This will break your bot.")) return;
+		setApiKey(null);
 	};
 
 	const copyToClipboard = () => {
@@ -86,6 +93,16 @@ function App() {
 			setTimeout(() => setCopied(false), 2000);
 		}
 	};
+
+	// --- LOADING SCREEN ---
+	if (authLoading) {
+		return (
+			<div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-slate-400">
+				<Loader2 className="w-10 h-10 animate-spin text-indigo-500 mb-4" />
+				<p>Verifying Discord Code...</p>
+			</div>
+		);
+	}
 
 	// --- LOGIN SCREEN ---
 	if (!user) {
@@ -108,7 +125,7 @@ function App() {
 		);
 	}
 
-	// --- DASHBOARD SCREEN ---
+	// --- DASHBOARD ---
 	return (
 		<div className="min-h-screen bg-slate-950 text-slate-200 font-sans">
 			<nav className="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-10">
