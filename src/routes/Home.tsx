@@ -1,4 +1,5 @@
-import { Gamepad2, Puzzle, Zap, Code2, Calculator, Github } from "lucide-react";
+import { Gamepad2, Puzzle, Zap, Code2, Calculator, Folders } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function Home() {
 	return (
@@ -38,13 +39,12 @@ export default function Home() {
 					>
 						<Code2 className="w-5 h-5" /> npm install @m3rcena/weky
 					</a>
-					<a
-						href="https://github.com/M3rcena/m3rcena-weky"
-						target="_blank"
+					<Link
+						to="/docs"
 						className="bg-white/10 hover:bg-white/20 text-white border border-white/10 px-6 py-3 rounded-xl font-bold transition flex items-center gap-2"
 					>
-						<Github className="w-5 h-5" /> View Github
-					</a>
+						<Folders className="w-5 h-5" /> View Docs
+					</Link>
 				</div>
 			</div>
 
