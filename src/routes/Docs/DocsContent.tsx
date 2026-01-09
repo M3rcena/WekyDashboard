@@ -1142,6 +1142,321 @@ const GuessThePokemonDoc = () => (
 	</div>
 );
 
+const HangmanDoc = () => (
+	<div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+		<header className="mb-10">
+			<div className="flex items-center gap-3 mb-4">
+				<span className="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-bold uppercase tracking-widest">
+					Minigame
+				</span>
+			</div>
+			<h1 className="text-4xl font-bold text-white mb-4 tracking-tight">Hangman</h1>
+			<p className="text-lg text-gray-400 leading-relaxed">
+				The classic word-guessing game reimagined with dynamic visual feedback. Weky generates a real-time image of the
+				board as players guess letters, handling validation and win/loss states automatically.
+			</p>
+		</header>
+
+		{/* --- QUICK START --- */}
+		<section className="mb-16">
+			<h2 className="text-2xl font-bold text-white mb-6">Quick Start</h2>
+			<CodeBlock
+				language="typescript"
+				code={`await weky.createHangman({
+    context: interaction,
+    time: 60000 // Optional: defaults to 3 minutes
+});`}
+			/>
+		</section>
+
+		{/* --- GAME MECHANICS --- */}
+		<section className="mb-16">
+			<h2 className="text-2xl font-bold text-white mb-6">How It Works</h2>
+
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+				<div className="p-6 rounded-2xl border border-white/5 bg-white/1 hover:bg-white/3 transition-colors">
+					<h4 className="text-cyan-400 font-bold mb-2 flex items-center gap-2">Visual Board Generation</h4>
+					<p className="text-xs text-gray-400 leading-relaxed">
+						Unlike text-based versions, this game generates a unique <strong>PNG attachment</strong> for every turn. It
+						combines the user's avatar, the current hangman state, and the word progress into a single image.
+					</p>
+				</div>
+
+				<div className="p-6 rounded-2xl border border-white/5 bg-white/1 hover:bg-white/3 transition-colors">
+					<h4 className="text-white font-bold mb-2 flex items-center gap-2">Strict Input Validation</h4>
+					<p className="text-xs text-gray-400 leading-relaxed">
+						The collector automatically validates guesses. It rejects symbols, numbers, or multiple letters, warning the
+						user with a temporary message like <em>"Please provide a single letter!"</em>.
+					</p>
+				</div>
+			</div>
+		</section>
+
+		{/* --- NETWORK LOGIC --- */}
+		<section className="mb-16">
+			<h2 className="text-2xl font-bold text-white mb-6">Logic Flow</h2>
+			<div className="space-y-4">
+				<div className="bg-[#0d0d0e] p-5 rounded-xl border border-white/5">
+					<ul className="space-y-3 text-sm text-gray-400">
+						<li className="flex gap-3">
+							<span className="text-cyan-500 font-mono">01.</span>
+							<span>
+								Game initializes via <code>createGame</code> API, linking the session to the context User ID.
+							</span>
+						</li>
+						<li className="flex gap-3">
+							<span className="text-cyan-500 font-mono">02.</span>
+							<span>
+								Initial <strong>Board Image</strong> is fetched and sent as a message attachment.
+							</span>
+						</li>
+						<li className="flex gap-3">
+							<span className="text-cyan-500 font-mono">03.</span>
+							<span>
+								User inputs a letter. Logic validates input matches <code>/[a-z]/i</code>.
+							</span>
+						</li>
+						<li className="flex gap-3">
+							<span className="text-cyan-500 font-mono">04.</span>
+							<span>
+								Input is sent to API. API calculates lives, correct guesses, and generates a{" "}
+								<strong>new board buffer</strong>.
+							</span>
+						</li>
+						<li className="flex gap-3">
+							<span className="text-cyan-500 font-mono">05.</span>
+							<span>
+								The original bot message is <strong>edited</strong> with the new image attachment.
+							</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</section>
+
+		{/* --- OPTIONS TABLE --- */}
+		<section className="mb-16">
+			<h2 className="text-2xl font-bold text-white mb-4">Configuration (HangmanTypes)</h2>
+			<PropsTable
+				data={[
+					{ name: "context", type: "Context", desc: "The interaction or message triggering the game." },
+					{ name: "time", type: "number", desc: "Time limit for the entire game in ms (default: 180,000 / 3 mins)." },
+				]}
+			/>
+		</section>
+
+		{/* --- NOTES --- */}
+		<section className="mb-16">
+			<div className="p-4 rounded-xl border border-yellow-500/10 bg-yellow-500/5">
+				<h4 className="text-xs font-bold text-yellow-500 uppercase mb-2">Requirement Note</h4>
+				<p className="text-xs text-gray-400">
+					This minigame relies on a healthy connection to the <strong>NetworkManager</strong> API endpoints (
+					<code>/Hangman/createGame</code>, <code>/Hangman/getBoardImage</code>). If the API is offline, the game will
+					fail to start or generate images.
+				</p>
+			</div>
+		</section>
+	</div>
+);
+
+const LieSwatterDoc = () => (
+	<div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+		<header className="mb-10">
+			<div className="flex items-center gap-3 mb-4">
+				<span className="px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-bold uppercase tracking-widest">
+					Minigame
+				</span>
+			</div>
+			<h1 className="text-4xl font-bold text-white mb-4 tracking-tight">Lie Swatter</h1>
+			<p className="text-lg text-gray-400 leading-relaxed">
+				A fast-paced trivia challenge powered by the <strong>Open Trivia DB</strong>. Players are presented with a
+				random fact and must determine if it is the
+				<strong>Truth</strong> or a <strong>Lie</strong> before time runs out.
+			</p>
+		</header>
+
+		{/* --- QUICK START --- */}
+		<section className="mb-16">
+			<h2 className="text-2xl font-bold text-white mb-6">Quick Start</h2>
+			<CodeBlock
+				language="typescript"
+				code={`await weky.createLieSwatter({
+    context: interaction,
+    embed: {
+        title: "Fact or Fiction?",
+        color: "#2ECC71", // Green
+        footer: "Powered by OpenTDB"
+    },
+    buttons: {
+        true: "Truth",
+        lie: "Lie"
+    },
+    time: 30000 // 30 seconds
+});`}
+			/>
+		</section>
+
+		{/* --- MECHANICS --- */}
+		<section className="mb-16">
+			<h2 className="text-2xl font-bold text-white mb-6">How It Works</h2>
+
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+				<div className="p-6 rounded-2xl border border-white/5 bg-white/1 hover:bg-white/3 transition-colors">
+					<h4 className="text-green-400 font-bold mb-2 flex items-center gap-2">Live Data Fetching</h4>
+					<p className="text-xs text-gray-400 leading-relaxed">
+						The game fetches a live boolean question from <code>opentdb.com</code> at the start of every game. It
+						automatically decodes HTML entities (like <code>&quot;</code>) so the question is readable.
+					</p>
+				</div>
+
+				<div className="p-6 rounded-2xl border border-white/5 bg-white/1 hover:bg-white/3 transition-colors">
+					<h4 className="text-white font-bold mb-2 flex items-center gap-2">Button Interaction</h4>
+					<p className="text-xs text-gray-400 leading-relaxed">
+						The game uses Discord Buttons for input. Once a selection is made, the buttons are disabled and colored{" "}
+						<strong>Green</strong> (Correct) or <strong>Red</strong> (Incorrect) to reveal the answer.
+					</p>
+				</div>
+			</div>
+		</section>
+
+		{/* --- CONFIGURATION --- */}
+		<section className="mb-16">
+			<h2 className="text-2xl font-bold text-white mb-4">Configuration (LieSwatterTypes)</h2>
+			<PropsTable
+				data={[
+					{ name: "context", type: "Context", desc: "The interaction or message triggering the game." },
+					{ name: "embed", type: "Embeds", desc: "Base embed configuration (title, color, etc)." },
+					{ name: "buttons", type: "{ true: string, lie: string }", desc: "Custom labels for the buttons." },
+					{ name: "winMessage", type: "string", desc: "Message shown when the user guesses correctly." },
+					{ name: "loseMessage", type: "string", desc: "Message shown when the user is wrong." },
+					{ name: "thinkMessage", type: "string", desc: "Temporary text shown while fetching the question." },
+					{ name: "time", type: "number", desc: "Time limit in ms (default: 60,000)." },
+				]}
+			/>
+		</section>
+
+		{/* --- PLACEHOLDERS --- */}
+		<section className="mb-16">
+			<h2 className="text-2xl font-bold text-white mb-6">String Placeholders</h2>
+			<div className="space-y-4">
+				<div className="bg-[#0d0d0e] p-4 rounded-xl border border-white/5">
+					<h4 className="text-xs font-bold text-gray-500 uppercase mb-3">Win/Lose Messages</h4>
+					<div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-[10px] font-mono">
+						<div className="text-green-400">
+							{"{{answer}}"}
+							<span className="block text-gray-600 mt-1">The correct button label (e.g., "Truth")</span>
+						</div>
+						<div className="text-green-400">
+							{"{{time}}"}
+							<span className="block text-gray-600 mt-1">How long it took to answer</span>
+						</div>
+						<div className="text-green-400">
+							{"{{author}}"}
+							<span className="block text-gray-600 mt-1">The ID of the user playing</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+);
+
+const NeverHaveIEverDoc = () => (
+	<div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+		<header className="mb-10">
+			<div className="flex items-center gap-3 mb-4">
+				<span className="px-3 py-1 rounded-full bg-pink-500/10 border border-pink-500/20 text-pink-400 text-xs font-bold uppercase tracking-widest">
+					Minigame
+				</span>
+			</div>
+			<h1 className="text-4xl font-bold text-white mb-4 tracking-tight">Never Have I Ever</h1>
+			<p className="text-lg text-gray-400 leading-relaxed">
+				A digital twist on the classic party game. Weky fetches a random "harmless" statement from an external API, and
+				the user must admit if they have done it or not using interactive buttons.
+			</p>
+		</header>
+
+		{/* --- QUICK START --- */}
+		<section className="mb-16">
+			<h2 className="text-2xl font-bold text-white mb-6">Quick Start</h2>
+			<CodeBlock
+				language="typescript"
+				code={`await weky.createNeverHaveIEver({
+    context: interaction,
+    embed: {
+        title: "Never Have I Ever...",
+        color: "#E91E63", // Pink
+        footer: "Be honest!"
+    },
+    buttons: {
+        optionA: "I Have",
+        optionB: "I Have Not"
+    }
+});`}
+			/>
+		</section>
+
+		{/* --- MECHANICS --- */}
+		<section className="mb-16">
+			<h2 className="text-2xl font-bold text-white mb-6">How It Works</h2>
+
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+				<div className="p-6 rounded-2xl border border-white/5 bg-white/1 hover:bg-white/3 transition-colors">
+					<h4 className="text-pink-400 font-bold mb-2 flex items-center gap-2">External API Integration</h4>
+					<p className="text-xs text-gray-400 leading-relaxed">
+						The game fetches questions from <code>api.nhie.io</code>. It specifically requests the
+						<strong>"harmless"</strong> category to ensure all questions are safe for public Discord servers and conform
+						to ToS.
+					</p>
+				</div>
+
+				<div className="p-6 rounded-2xl border border-white/5 bg-white/1 hover:bg-white/3 transition-colors">
+					<h4 className="text-white font-bold mb-2 flex items-center gap-2">Interaction Flow</h4>
+					<p className="text-xs text-gray-400 leading-relaxed">
+						Only the user who started the command can answer. Once they click "Yes" or "No", the buttons update to show
+						their choice (e.g., "Yes (Yes)") and become disabled to prevent changing answers.
+					</p>
+				</div>
+			</div>
+		</section>
+
+		{/* --- CONFIGURATION --- */}
+		<section className="mb-16">
+			<h2 className="text-2xl font-bold text-white mb-4">Configuration (NeverHaveIEverTypes)</h2>
+			<PropsTable
+				data={[
+					{ name: "context", type: "Context", desc: "The interaction or message triggering the game." },
+					{ name: "embed", type: "Embeds", desc: "Base embed configuration (title, color, etc)." },
+					{ name: "buttons", type: "object", desc: "Custom labels for options. Defaults to 'Yes' and 'No'." },
+					{
+						name: "thinkMessage",
+						type: "string",
+						desc: "Message shown while fetching the API (Default: 'I am thinking').",
+					},
+					{ name: "othersMessage", type: "string", desc: "Warning shown if other users try to click buttons." },
+					{ name: "time", type: "number", desc: "Time limit in ms (default: 60,000)." },
+				]}
+			/>
+		</section>
+
+		{/* --- PLACEHOLDERS --- */}
+		<section className="mb-16">
+			<h2 className="text-2xl font-bold text-white mb-6">Placeholders</h2>
+			<div className="space-y-4">
+				<div className="bg-[#0d0d0e] p-4 rounded-xl border border-white/5">
+					<h4 className="text-xs font-bold text-gray-500 uppercase mb-3">Others Message</h4>
+					<div className="grid grid-cols-1 gap-2 text-[10px] font-mono">
+						<div className="text-pink-400">
+							{"{{author}}"}
+							<span className="text-gray-600 ml-2">- The ID of the user allowed to play</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+);
+
 const contentMap: Record<string, React.FC> = {
 	installation: Installation,
 	"api-key": APIKey,
@@ -1155,6 +1470,9 @@ const contentMap: Record<string, React.FC> = {
 	"game-fight": GameFightDoc,
 	"game-number": GuessTheNumberDoc,
 	"game-pokemon": GuessThePokemonDoc,
+	"game-hangman": HangmanDoc,
+	"game-lie-swatter": LieSwatterDoc,
+	"game-nhie": NeverHaveIEverDoc,
 };
 
 export default function DocsContent() {
