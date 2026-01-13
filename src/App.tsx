@@ -16,6 +16,7 @@ import Status from "./routes/Status";
 import type { DiscordUser } from "./services/discordOauth";
 import DocsLayout from "./components/DocsLayout";
 import DocsContent from "./routes/Docs/DocsContent";
+import NotFound from "./routes/NotFound";
 
 function AppContent() {
 	const location = useLocation();
@@ -62,9 +63,11 @@ function AppContent() {
 					<Route index element={<Navigate to="installation" replace />} />
 					<Route path=":slug" element={<DocsContent />} />
 				</Route>
+
+				<Route path="*" element={<NotFound />} />
 			</Routes>
 
-			<Footer />
+			{!isDocsPage && <Footer />}
 		</div>
 	);
 }

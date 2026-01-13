@@ -23,6 +23,8 @@ export const docsConfig: DocCategory[] = [
 		items: [
 			{ title: "WekyManager", slug: "weky-manager", description: "The main entry point." },
 			{ title: "NetworkManager", slug: "network-manager", description: "Internal API handling." },
+			{ title: "LoggerManager", slug: "logger-manager", description: "Internal Logger handling." },
+			{ title: "EventManager", slug: "event-manager", description: "Internal Discord Events handling." },
 		],
 	},
 	{
@@ -43,6 +45,39 @@ export const docsConfig: DocCategory[] = [
 			{ title: "Snake", slug: "game-snake" },
 			{ title: "Will You Press The Button", slug: "game-wyptb" },
 			{ title: "Would You Rather", slug: "game-wyr" },
+		],
+	},
+	{
+		title: "Core Types",
+		items: [
+			{ title: "Discord JS Extend", slug: "types-extend-discordjs", description: "Extended Discord JS types" },
+			{ title: "Embeds", slug: "types-embeds", description: "Package Embed Options" },
+			{ title: "Custom Options", slug: "types-custom-options", description: "The checked options of a minigame" },
+			{
+				title: "Minigames Base",
+				slug: "types-iminigame",
+				description: "The base interface used in all minigame classes",
+			},
+		],
+	},
+	{
+		title: "Types",
+		items: [
+			{ title: "2048", slug: "types-2048" },
+			{ title: "Calculator", slug: "types-calculator" },
+			{ title: "Chaos Words", slug: "types-chaos-words" },
+			{ title: "Fast Type", slug: "types-fast-type" },
+			{ title: "Fight", slug: "types-fight" },
+			{ title: "Guess The Number", slug: "types-number" },
+			{ title: "Guess The Pokemon", slug: "types-pokemon" },
+			{ title: "Hangman", slug: "types-hangman" },
+			{ title: "Lie Swatter", slug: "types-lie-swatter" },
+			{ title: "Never Have I Ever", slug: "types-nhie" },
+			{ title: "Quick Click", slug: "types-click" },
+			{ title: "Shuffle Guess", slug: "types-shuffle-guess" },
+			{ title: "Snake", slug: "types-snake" },
+			{ title: "Will You Press The Button", slug: "types-wyptb" },
+			{ title: "Would You Rather", slug: "types-wyr" },
 		],
 	},
 ];
