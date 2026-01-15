@@ -1,187 +1,178 @@
-import { FileJson, Hash, Image, User, Calendar, Type, type LucideIcon } from "lucide-react";
+import { Palette, Layout, Image, Type, Clock, User, PanelBottom, type LucideIcon } from "lucide-react";
 import { CodeBlock } from "../../components/CodeBlock";
 
-// --- STRICT TYPES FOR PROPERTY ROW ---
-interface PropertyRowProps {
+// --- REUSABLE COMPONENTS ---
+
+interface PropRowProps {
 	name: string;
 	type: string;
-	required?: boolean;
 	desc: string;
 	icon?: LucideIcon;
 }
 
-// --- HELPER COMPONENT ---
-const PropertyRow = ({ name, type, required = false, desc, icon: Icon }: PropertyRowProps) => (
-	<div className="flex flex-col sm:flex-row sm:items-start gap-4 p-4 border-b border-white/5 last:border-0 hover:bg-white/2 transition-colors">
-		<div className="sm:w-48 shrink-0">
-			<div className="flex items-center gap-2 mb-1">
-				{Icon && <Icon className="w-3.5 h-3.5 text-purple-400" />}
-				<span className="font-mono text-sm font-bold text-white">{name}</span>
+const PropRow = ({ name, type, desc, icon: Icon }: PropRowProps) => (
+	<div className="group flex flex-col md:flex-row md:items-start gap-4 p-5 border-b border-white/5 last:border-0 hover:bg-white/2 transition-all duration-300">
+		<div className="md:w-48 shrink-0">
+			<div className="flex items-center gap-2 mb-1.5">
+				{Icon && <Icon className="w-4 h-4 text-pink-400" />}
+				<span className="font-mono text-sm font-bold text-white group-hover:text-pink-300 transition-colors">
+					{name}
+				</span>
 			</div>
-			<div className="flex items-center gap-2 flex-wrap">
-				<span className="text-[10px] font-mono text-purple-300 bg-purple-500/10 px-1.5 py-0.5 rounded border border-purple-500/20">
+			<div className="flex items-center gap-2">
+				<span className="text-[10px] font-mono text-gray-400 bg-white/5 px-2 py-0.5 rounded border border-white/10 break-all">
 					{type}
 				</span>
-				{!required && <span className="text-[10px] uppercase font-bold text-gray-600 tracking-wider">Optional</span>}
 			</div>
 		</div>
-		<p className="text-sm text-gray-400 leading-relaxed pt-0.5">{desc}</p>
+		<div className="flex-1">
+			<p className="text-sm text-gray-400 leading-relaxed">{desc}</p>
+		</div>
 	</div>
 );
 
-// --- MAIN PAGE COMPONENT ---
+const SectionHeader = ({ icon: Icon, title }: { icon: LucideIcon; title: string }) => (
+	<div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/5">
+		<div className="p-2 rounded-lg bg-white/5 border border-white/10">
+			<Icon className="w-5 h-5 text-pink-400" />
+		</div>
+		<h2 className="text-lg font-bold text-white tracking-wide">{title}</h2>
+	</div>
+);
+
+// --- MAIN COMPONENT ---
+
 export default function TypesEmbeds() {
 	return (
-		<div className="animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-4xl">
-			<header className="mb-12">
-				<div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-medium mb-6">
-					<FileJson className="w-3 h-3" />
-					Core Interfaces
+		<div className="animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-5xl mx-auto p-4 sm:p-6">
+			{/* HEADER */}
+			<header className="mb-16">
+				<div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-500/10 border border-pink-500/20 text-pink-300 text-xs font-medium mb-6">
+					<Palette className="w-3 h-3" />
+					Shared Interface
 				</div>
-				<h1 className="text-4xl font-bold text-white tracking-tight mb-4">Embed Configurations</h1>
-				<p className="text-lg text-gray-400 leading-relaxed">
-					These shared interfaces control the visual structure of Discord embeds across all Weky minigames.
-					Standardizing these types ensures a consistent theme for your bot.
+				<h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-6">
+					Embeds{" "}
+					<span className="text-transparent bg-clip-text bg-linear-to-r from-pink-400 to-purple-400">Config</span>
+				</h1>
+				<p className="text-lg text-gray-400 leading-relaxed max-w-2xl">
+					A simplified interface for configuring Discord Embeds. This structure is used across all minigames to define
+					the visual appearance of the game board.
 				</p>
 			</header>
 
-			{/* --- SECTION 1: EMBEDS --- */}
-			<section className="mb-16">
-				<h2 className="text-2xl font-semibold text-white mb-6 flex items-center gap-3">
-					<span className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-purple-400">
-						<FileJson className="w-5 h-5" />
-					</span>
-					Embeds Interface
-				</h2>
-
-				<CodeBlock
-					language="typescript"
-					code={`export interface Embeds {
-    color: ColorResolvable;
-    title: string;
+			{/* INTERFACE CODE */}
+			<section className="mb-20">
+				<SectionHeader icon={Layout} title="Interface Definition" />
+				<div className="border border-white/10 rounded-xl overflow-hidden shadow-2xl">
+					<CodeBlock
+						className="my-0!"
+						language="typescript"
+						code={`export interface Embeds {
+    color?: ColorResolvable;
+    title?: string;
     url?: string;
-    author?: Author;
-    footer?: EmbedFooterData;
+    author?: { name: string; icon_url?: string; url?: string };
     description?: string;
-    fields?: Fields[];
-    image?: string;
-    timestamp?: Date | boolean;
     thumbnail?: string;
+    fields?: { name: string; value: string; inline?: boolean }[];
+    image?: string;
+    footer?: { text: string; iconURL?: string };
+    timestamp?: Date | boolean;
 }`}
-				/>
-
-				<div className="rounded-2xl border border-white/5 bg-white/1 overflow-hidden mt-6">
-					<div className="px-6 py-4 border-b border-white/5 bg-white/2">
-						<h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest">Properties</h3>
-					</div>
-					<div className="divide-y divide-white/5">
-						<PropertyRow
-							name="color"
-							type="ColorResolvable"
-							required={true}
-							desc="The accent color strip on the left side of the embed. Accepts hex strings, RGB tuples, or Discord constants."
-							icon={Hash}
-						/>
-						<PropertyRow
-							name="title"
-							type="string"
-							required={true}
-							desc="The main header text of the embed window."
-							icon={Type}
-						/>
-						<PropertyRow
-							name="description"
-							type="string"
-							desc="The main body text content. Supports standard Discord markdown."
-							icon={Type}
-						/>
-						<PropertyRow
-							name="image"
-							type="string"
-							desc="URL to a large image displayed at the bottom of the embed."
-							icon={Image}
-						/>
-						<PropertyRow
-							name="thumbnail"
-							type="string"
-							desc="URL to a small image displayed in the top-right corner."
-							icon={Image}
-						/>
-						<PropertyRow
-							name="timestamp"
-							type="Date | boolean"
-							desc="If set to true or provided a Date object, displays the time in the footer."
-							icon={Calendar}
-						/>
-						<PropertyRow
-							name="fields"
-							type="Fields[]"
-							desc="An array of field objects to create columns or lists within the embed."
-							icon={Hash}
-						/>
-					</div>
+					/>
 				</div>
 			</section>
 
-			{/* --- SECTION 2: SUB-TYPES --- */}
-			<section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-				{/* Author Interface */}
-				<div>
-					<h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-						<User className="w-4 h-4 text-purple-400" />
-						Author Type
-					</h3>
-					<CodeBlock
-						language="typescript"
-						code={`interface Author {
-    name: string;
-    icon_url?: string;
-    url?: string;
-}`}
-					/>
-					<div className="mt-4 space-y-3">
-						<div className="pl-4 border-l-2 border-purple-500/30">
-							<div className="text-sm font-bold text-white mb-1">name</div>
-							<p className="text-xs text-gray-400">The text displayed at the very top of the embed.</p>
+			{/* VISUALIZER & PROPS */}
+			<section className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-20">
+				{/* Visualizer */}
+				<div className="lg:col-span-1">
+					<div className="sticky top-6">
+						<div className="bg-[#313338] rounded-l border-l-4 border-pink-500 p-4 max-w-sm shadow-xl font-sans">
+							{/* Author */}
+							<div className="flex items-center gap-2 mb-2">
+								<div className="w-6 h-6 rounded-full bg-white/10" />
+								<span className="text-xs font-bold text-white">Author Name</span>
+							</div>
+							{/* Title */}
+							<div className="text-[#00A8FC] font-bold text-sm mb-2 hover:underline cursor-pointer">Embed Title</div>
+							{/* Description */}
+							<div className="text-gray-300 text-xs leading-relaxed mb-3">
+								This is the <code>description</code> field. It supports markdown and is the main body of the embed.
+							</div>
+							{/* Fields */}
+							<div className="grid grid-cols-2 gap-2 mb-3">
+								<div>
+									<div className="text-xs font-bold text-white mb-0.5">Field 1</div>
+									<div className="text-xs text-gray-300">Value 1</div>
+								</div>
+								<div>
+									<div className="text-xs font-bold text-white mb-0.5">Field 2</div>
+									<div className="text-xs text-gray-300">Value 2</div>
+								</div>
+							</div>
+							{/* Image */}
+							<div className="w-full h-32 bg-pink-500/20 rounded mb-2 border border-white/5 flex items-center justify-center text-xs text-pink-400">
+								Main Image
+							</div>
+							{/* Footer */}
+							<div className="flex items-center gap-2 pt-2 border-t border-white/5">
+								<div className="w-4 h-4 rounded-full bg-white/10" />
+								<span className="text-[10px] text-gray-400">Footer Text • Today at 12:00 PM</span>
+							</div>
 						</div>
-						<div className="pl-4 border-l-2 border-white/5">
-							<div className="text-sm font-bold text-white mb-1">icon_url</div>
-							<p className="text-xs text-gray-400">Small circular avatar displayed next to the author name.</p>
-						</div>
-						<div className="pl-4 border-l-2 border-white/5">
-							<div className="text-sm font-bold text-white mb-1">url</div>
-							<p className="text-xs text-gray-400">Makes the author name a clickable hyperlink.</p>
-						</div>
+						<p className="text-center text-xs text-gray-500 mt-4">Visual representation of the properties</p>
 					</div>
 				</div>
 
-				{/* Fields Interface */}
-				<div>
-					<h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-						<Hash className="w-4 h-4 text-purple-400" />
-						Fields Type
-					</h3>
-					<CodeBlock
-						language="typescript"
-						code={`interface Fields {
-    name: string;
-    value: string;
-    inline?: boolean;
-}`}
-					/>
-					<div className="mt-4 space-y-3">
-						<div className="pl-4 border-l-2 border-purple-500/30">
-							<div className="text-sm font-bold text-white mb-1">name</div>
-							<p className="text-xs text-gray-400">The bold title of the field.</p>
+				{/* Props List */}
+				<div className="lg:col-span-2 rounded-2xl border border-white/10 bg-[#0d0d0e] overflow-hidden">
+					<div className="px-6 py-4 border-b border-white/5 bg-white/2 flex items-center justify-between">
+						<div className="flex items-center gap-2">
+							<Palette className="w-4 h-4 text-pink-400" />
+							<h3 className="text-sm font-bold text-white">Properties</h3>
 						</div>
-						<div className="pl-4 border-l-2 border-purple-500/30">
-							<div className="text-sm font-bold text-white mb-1">value</div>
-							<p className="text-xs text-gray-400">The content text of the field.</p>
-						</div>
-						<div className="pl-4 border-l-2 border-white/5">
-							<div className="text-sm font-bold text-white mb-1">inline</div>
-							<p className="text-xs text-gray-400">If true, fields will stack horizontally instead of vertically.</p>
-						</div>
+					</div>
+					<div className="divide-y divide-white/5">
+						<PropRow name="title" type="string" desc="The main header text of the embed." icon={Type} />
+						<PropRow
+							name="description"
+							type="string"
+							desc="The main body content. Supports Discord Markdown."
+							icon={Type}
+						/>
+						<PropRow
+							name="color"
+							type="ColorResolvable"
+							desc="The accent color of the side border (e.g., #FF0000, 'Red')."
+							icon={Palette}
+						/>
+						<PropRow name="image" type="string (URL)" desc="The large image displayed at the bottom." icon={Image} />
+						<PropRow
+							name="thumbnail"
+							type="string (URL)"
+							desc="Small image displayed in the top-right corner."
+							icon={Image}
+						/>
+						<PropRow
+							name="author"
+							type="Author Object"
+							desc="Small text and icon displayed above the title."
+							icon={User}
+						/>
+						<PropRow
+							name="footer"
+							type="EmbedFooterData"
+							desc="Small text and icon displayed at the very bottom."
+							icon={PanelBottom}
+						/>
+						<PropRow
+							name="timestamp"
+							type="Date | boolean"
+							desc="If true/Date provided, displays a formatted timestamp in the footer."
+							icon={Clock}
+						/>
 					</div>
 				</div>
 			</section>

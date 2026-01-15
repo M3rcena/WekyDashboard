@@ -38,6 +38,10 @@ import DocsWillYouPressTheButton from "../../docs/minigames/game-wyptb";
 import TypesWillYouPressTheButton from "../../docs/types/types-wyptb";
 import DocsWouldYouRather from "../../docs/minigames/game-wyr";
 import TypesWouldYouRather from "../../docs/types/types-wyr";
+import TypesContext from "../../docs/coreTypes/discord-extensions";
+import TypesEmbeds from "../../docs/coreTypes/common-embeds";
+import TypesCustomOptions from "../../docs/coreTypes/custom-options";
+import TypesIMinigame from "../../docs/coreTypes/iminigame";
 
 const contentMap: Record<string, React.FC> = {
 	// GETTING STARTED
@@ -69,6 +73,10 @@ const contentMap: Record<string, React.FC> = {
 	"game-wyr": DocsWouldYouRather,
 
 	// CORE TYPES
+	"types-extend-discordjs": TypesContext,
+	"types-embeds": TypesEmbeds,
+	"types-custom-options": TypesCustomOptions,
+	"types-iminigame": TypesIMinigame,
 
 	// TYPES
 	"types-2048": Types2048,

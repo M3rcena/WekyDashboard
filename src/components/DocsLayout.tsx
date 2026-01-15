@@ -187,7 +187,7 @@ export default function DocsLayout() {
 				</div>
 
 				{/* Optional: Sidebar Footer / Version info could go here */}
-				<div className="p-4 border-t border-white/5 text-xs text-gray-600 text-center">v1.0.2 • Stable</div>
+				<div className="p-4 border-t border-white/5 text-xs text-gray-600 text-center">v12.25.1 • Stable</div>
 			</aside>
 
 			{/* MAIN CONTENT AREA */}
