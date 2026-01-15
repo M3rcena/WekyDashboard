@@ -7,9 +7,10 @@ import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 interface CodeBlockProps {
 	code: string;
 	language?: "typescript" | "bash" | "javascript" | "json" | "env";
+	className?: string;
 }
 
-export const CodeBlock = ({ code, language = "typescript" }: CodeBlockProps) => {
+export const CodeBlock = ({ code, className = "", language = "typescript" }: CodeBlockProps) => {
 	const [copied, setCopied] = useState(false);
 
 	const highlighterLanguage = language === "env" ? "bash" : language;
@@ -21,7 +22,9 @@ export const CodeBlock = ({ code, language = "typescript" }: CodeBlockProps) => 
 	};
 
 	return (
-		<div className="relative group my-6 rounded-xl overflow-hidden shadow-2xl border border-white/10 bg-[#1e1e1e]">
+		<div
+			className={`relative group my-6 rounded-xl overflow-hidden shadow-2xl border border-white/10 bg-[#1e1e1e] ${className}`}
+		>
 			<div className="flex justify-between items-center px-4 py-2 bg-white/5 border-b border-white/5">
 				<span className="text-xs font-mono text-gray-400 uppercase tracking-wider">
 					{language === "env" ? ".ENV" : language}

@@ -10,8 +10,18 @@ import TypesEmbeds from "../../docs/coreTypes/common-embeds";
 import TypesCustomOptions from "../../docs/coreTypes/custom-options";
 import TypesFastType from "../../docs/types/types-fast-type";
 import TypesFight from "../../docs/types/types-fight";
+import TypesGuessTheNumber from "../../docs/types/types-guess-number";
+import TypesGuessPokemon from "../../docs/types/types-guess-pokemon";
+import InstallationDocs from "../../docs/gettingStarted/installation";
+import APIKeyDocs from "../../docs/gettingStarted/api-key";
+import InitializationDocs from "../../docs/gettingStarted/initialization";
 
 const contentMap: Record<string, React.FC> = {
+	// GETTING STARTED
+	installation: InstallationDocs,
+	"api-key": APIKeyDocs,
+	initialization: InitializationDocs,
+
 	// CORE TYPES
 	"types-extend-discordjs": TypesDiscordExtensions,
 	"types-embeds": TypesEmbeds,
@@ -24,6 +34,8 @@ const contentMap: Record<string, React.FC> = {
 	"types-chaos-words": TypesChaosWords,
 	"types-fast-type": TypesFastType,
 	"types-fight": TypesFight,
+	"types-guess-number": TypesGuessTheNumber,
+	"types-guess-pokemon": TypesGuessPokemon,
 };
 
 export default function DocsContent() {
