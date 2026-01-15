@@ -1,20 +1,13 @@
 import React from "react";
 import { useParams, Navigate } from "react-router-dom";
 
-import TypesChaosWords from "../../docs/types/types-chaos-words";
-import TypesCalculator from "../../docs/types/types-calculator";
-import Types2048 from "../../docs/types/types-2048";
-import TypesIMinigame from "../../docs/coreTypes/iminigame";
-import TypesDiscordExtensions from "../../docs/coreTypes/discord-extensions";
-import TypesEmbeds from "../../docs/coreTypes/common-embeds";
-import TypesCustomOptions from "../../docs/coreTypes/custom-options";
-import TypesFastType from "../../docs/types/types-fast-type";
-import TypesFight from "../../docs/types/types-fight";
-import TypesGuessTheNumber from "../../docs/types/types-guess-number";
-import TypesGuessPokemon from "../../docs/types/types-guess-pokemon";
 import InstallationDocs from "../../docs/gettingStarted/installation";
 import APIKeyDocs from "../../docs/gettingStarted/api-key";
 import InitializationDocs from "../../docs/gettingStarted/initialization";
+import WekyManagerDocs from "../../docs/coreClasses/weky-manager";
+import NetworkManagerDocs from "../../docs/coreClasses/network-manager";
+import LoggerManagerDocs from "../../docs/coreClasses/logger-manager";
+import EventManagerDocs from "../../docs/coreClasses/event-manager";
 
 const contentMap: Record<string, React.FC> = {
 	// GETTING STARTED
@@ -22,20 +15,11 @@ const contentMap: Record<string, React.FC> = {
 	"api-key": APIKeyDocs,
 	initialization: InitializationDocs,
 
-	// CORE TYPES
-	"types-extend-discordjs": TypesDiscordExtensions,
-	"types-embeds": TypesEmbeds,
-	"types-custom-options": TypesCustomOptions,
-	"types-iminigame": TypesIMinigame,
-
-	// MINIGAME TYPES
-	"types-2048": Types2048,
-	"types-calculator": TypesCalculator,
-	"types-chaos-words": TypesChaosWords,
-	"types-fast-type": TypesFastType,
-	"types-fight": TypesFight,
-	"types-guess-number": TypesGuessTheNumber,
-	"types-guess-pokemon": TypesGuessPokemon,
+	// CORE CLASSES
+	"weky-manager": WekyManagerDocs,
+	"network-manager": NetworkManagerDocs,
+	"logger-manager": LoggerManagerDocs,
+	"event-manager": EventManagerDocs,
 };
 
 export default function DocsContent() {
