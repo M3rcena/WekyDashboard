@@ -1,5 +1,5 @@
 import {
-	Keyboard,
+	MousePointer2,
 	Palette,
 	Terminal,
 	MessageSquare,
@@ -7,8 +7,7 @@ import {
 	CheckCircle2,
 	XCircle,
 	Clock,
-	ShieldAlert,
-	Type,
+	Smile,
 	type LucideIcon,
 } from "lucide-react";
 import { CodeBlock } from "../../components/CodeBlock";
@@ -115,21 +114,21 @@ const StatusCard = ({
 
 // --- MAIN COMPONENT ---
 
-export default function TypesFastType() {
+export default function TypesQuickClick() {
 	return (
 		<div className="animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-5xl mx-auto p-4 sm:p-6">
 			{/* HEADER */}
 			<header className="mb-16">
 				<div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-medium mb-6">
-					<Keyboard className="w-3 h-3" />
+					<MousePointer2 className="w-3 h-3" />
 					Types Reference
 				</div>
 				<h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-6">
 					Types
-					<span className="text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-pink-400">FastType</span>
+					<span className="text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-pink-400">QuickClick</span>
 				</h1>
 				<p className="text-lg text-gray-400 leading-relaxed max-w-2xl">
-					Configuration options for the FastType minigame.
+					Configuration options for the Quick Click minigame.
 				</p>
 			</header>
 
@@ -140,12 +139,13 @@ export default function TypesFastType() {
 					<CodeBlock
 						className="my-0!"
 						language="typescript"
-						code={`export interface FastTypeTypes {
+						code={`export interface QuickClickTypes {
     context: Context;
-    embed: Partial<Pick<Embeds, "title" | "color">>;
-    sentence?: string;
-    difficulty?: "easy" | "medium" | "hard";
+    embed: Partial<Pick<Embeds, "title">>;
+    emoji?: string;
     time?: number;
+    waitMessage?: string;
+    startMessage?: string;
     // ... custom messages
 }`}
 					/>
@@ -170,13 +170,12 @@ export default function TypesFastType() {
 							required={true}
 							icon={Terminal}
 						/>
-						<PropRow name="sentence" type="string" desc="Custom text to type. Overrides 'difficulty'." icon={Type} />
 						<PropRow
-							name="difficulty"
-							type="'easy' | 'medium' | 'hard'"
-							desc="Complexity of fetched sentence if no custom text is provided."
-							defaultVal="'medium'"
-							icon={AlertCircle}
+							name="emoji"
+							type="string"
+							desc="The emoji to display on the winning button."
+							defaultVal="'👆'"
+							icon={Smile}
 						/>
 						<PropRow
 							name="time"
@@ -188,13 +187,12 @@ export default function TypesFastType() {
 					</div>
 				</div>
 
-				{/* Anti-Cheat Info */}
+				{/* Info Card */}
 				<div className="rounded-xl border border-white/10 bg-[#0d0d0e] p-6 flex flex-col items-center justify-center text-center">
-					<ShieldAlert className="w-12 h-12 text-red-500/20 mb-4" />
-					<h3 className="font-bold text-white mb-2">Anti-Cheat</h3>
+					<MousePointer2 className="w-12 h-12 text-blue-500/20 mb-4" />
+					<h3 className="font-bold text-white mb-2">Concurrency</h3>
 					<p className="text-xs text-gray-500">
-						The <code>cheatMessage</code> prop allows you to customize the warning sent when a user sends a message
-						without typing first.
+						This game automatically prevents multiple instances from running in the same channel to avoid spam.
 					</p>
 				</div>
 			</section>
@@ -207,7 +205,7 @@ export default function TypesFastType() {
 						icon={CheckCircle2}
 						color="green"
 						title="Success"
-						items={[{ key: "winMessage", desc: "Sent when typing matches perfectly." }]}
+						items={[{ key: "winMessage", desc: "Sent when player clicks correctly." }]}
 					/>
 
 					<StatusCard
@@ -215,18 +213,8 @@ export default function TypesFastType() {
 						color="red"
 						title="Failure"
 						items={[
-							{ key: "loseMessage", desc: "Sent on typo or mismatch." },
-							{ key: "timeoutMessage", desc: "Sent when time runs out." },
-						]}
-					/>
-
-					<StatusCard
-						icon={ShieldAlert}
-						color="yellow"
-						title="Validation"
-						items={[
-							{ key: "cheatMessage", desc: "Shown if typing event is missing." },
-							{ key: "failedFetchError", desc: "API fetch failure." },
+							{ key: "loseMessage", desc: "Sent when time expires." },
+							{ key: "ongoingMessage", desc: "If channel is busy." },
 						]}
 					/>
 
@@ -235,8 +223,18 @@ export default function TypesFastType() {
 						color="blue"
 						title="States"
 						items={[
-							{ key: "states.loading", desc: "Shown while fetching text." },
-							{ key: "states.active", desc: "Main game prompt." },
+							{ key: "waitMessage", desc: "Shown during random delay." },
+							{ key: "startMessage", desc: "Shown when button appears." },
+						]}
+					/>
+
+					<StatusCard
+						icon={AlertCircle}
+						color="yellow"
+						title="Errors"
+						items={[
+							{ key: "errors.gameAlreadyRunning", desc: "User already active." },
+							{ key: "errors.main", desc: "Generic error fallback." },
 						]}
 					/>
 				</div>

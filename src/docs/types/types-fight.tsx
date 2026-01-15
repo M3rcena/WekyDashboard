@@ -1,64 +1,149 @@
-import { Swords, Shield, Heart, Skull, UserPlus, MousePointer2, Zap, User, type LucideIcon } from "lucide-react";
+import {
+	Swords,
+	Palette,
+	Terminal,
+	MessageSquare,
+	AlertCircle,
+	CheckCircle2,
+	XCircle,
+	Clock,
+	User,
+	Zap,
+	MousePointerClick,
+	type LucideIcon,
+} from "lucide-react";
 import { CodeBlock } from "../../components/CodeBlock";
 
-// --- STRICT TYPES FOR CONFIG ROW ---
-interface ConfigRowProps {
-	property: string;
+// --- REUSABLE COMPONENTS ---
+
+interface PropRowProps {
+	name: string;
 	type: string;
 	desc: string;
 	defaultVal?: string;
+	required?: boolean;
 	icon?: LucideIcon;
 }
 
-// --- HELPER COMPONENT ---
-const ConfigRow = ({ property, type, desc, defaultVal, icon: Icon }: ConfigRowProps) => (
-	<div className="flex flex-col sm:flex-row sm:items-start gap-4 p-4 border-b border-white/5 last:border-0 hover:bg-white/2 transition-colors">
-		<div className="sm:w-60 shrink-0">
-			<div className="flex items-center gap-2 mb-1">
-				{Icon && <Icon className="w-3.5 h-3.5 text-purple-400" />}
-				<span className="font-mono text-sm font-bold text-white">{property}</span>
+const PropRow = ({ name, type, desc, defaultVal, required, icon: Icon }: PropRowProps) => (
+	<div className="group flex flex-col md:flex-row md:items-start gap-4 p-5 border-b border-white/5 last:border-0 hover:bg-white/2 transition-all duration-300">
+		<div className="md:w-52 shrink-0">
+			<div className="flex items-center gap-2 mb-1.5">
+				{Icon ? (
+					<Icon className="w-4 h-4 text-purple-400" />
+				) : (
+					<div className="w-4 h-4 rounded-full bg-purple-500/20 border border-purple-500/30" />
+				)}
+				<span className="font-mono text-sm font-bold text-white group-hover:text-purple-200 transition-colors">
+					{name}
+				</span>
+				{required && (
+					<span className="text-[10px] text-red-400 font-bold px-1.5 py-0.5 bg-red-500/10 rounded">REQ</span>
+				)}
 			</div>
-			<span className="text-[10px] font-mono text-gray-500 bg-white/5 px-1.5 py-0.5 rounded border border-white/10">
-				{type}
-			</span>
+			<div className="flex items-center gap-2">
+				<span className="text-[10px] font-mono text-purple-300 bg-purple-500/10 px-2 py-0.5 rounded border border-purple-500/20 break-all">
+					{type}
+				</span>
+			</div>
 		</div>
 		<div className="flex-1">
-			<p className="text-sm text-gray-400 leading-relaxed mb-1">{desc}</p>
+			<p className="text-sm text-gray-400 leading-relaxed mb-2">{desc}</p>
 			{defaultVal && (
-				<div className="text-[10px] text-gray-600 font-mono">
-					Default: <span className="text-gray-500">{defaultVal}</span>
+				<div className="inline-flex items-center gap-2 text-[11px] text-gray-500 font-mono bg-black/20 px-2 py-1 rounded">
+					<span>Default:</span>
+					<span className="text-gray-300">{defaultVal}</span>
 				</div>
 			)}
 		</div>
 	</div>
 );
 
+const SectionHeader = ({ icon: Icon, title }: { icon: LucideIcon; title: string }) => (
+	<div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/5">
+		<div className="p-2 rounded-lg bg-white/5 border border-white/10">
+			<Icon className="w-5 h-5 text-purple-400" />
+		</div>
+		<h2 className="text-lg font-bold text-white tracking-wide">{title}</h2>
+	</div>
+);
+
+const StatusCard = ({
+	icon: Icon,
+	color,
+	title,
+	items,
+}: {
+	icon: LucideIcon;
+	color: string;
+	title: string;
+	items: { key: string; desc: string }[];
+}) => {
+	const colorClasses: Record<string, string> = {
+		blue: "text-blue-400 border-blue-500/20 bg-blue-500/5",
+		green: "text-green-400 border-green-500/20 bg-green-500/5",
+		red: "text-red-400 border-red-500/20 bg-red-500/5",
+		yellow: "text-yellow-400 border-yellow-500/20 bg-yellow-500/5",
+	};
+	const activeColor = colorClasses[color];
+
+	return (
+		<div className="relative overflow-hidden rounded-xl border border-white/10 bg-[#121214] hover:border-white/20 transition-colors group h-full">
+			<div className={`absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity ${color}`}>
+				<Icon className="w-16 h-16" />
+			</div>
+			<div className="p-5 relative z-10">
+				<div
+					className={`inline-flex items-center gap-2 mb-4 px-2 py-1 rounded-md border text-xs font-bold uppercase tracking-wider ${activeColor}`}
+				>
+					<Icon className="w-3.5 h-3.5" />
+					{title}
+				</div>
+				<ul className="space-y-4">
+					{items.map((item, idx) => (
+						<li key={idx} className="group/item">
+							<div className="font-mono text-sm text-white mb-1 group-hover/item:text-purple-300 transition-colors wrap-break-word">
+								{item.key}
+							</div>
+							<div className="text-xs text-gray-500 leading-relaxed">{item.desc}</div>
+						</li>
+					))}
+				</ul>
+			</div>
+		</div>
+	);
+};
+
+// --- MAIN COMPONENT ---
+
 export default function TypesFight() {
 	return (
-		<div className="animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-4xl">
-			<header className="mb-12">
+		<div className="animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-5xl mx-auto p-4 sm:p-6">
+			{/* HEADER */}
+			<header className="mb-16">
 				<div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-medium mb-6">
 					<Swords className="w-3 h-3" />
-					Minigame Configuration
+					Types Reference
 				</div>
-				<h1 className="text-4xl font-bold text-white tracking-tight mb-4">Fight Options</h1>
-				<p className="text-lg text-gray-400 leading-relaxed">
-					A turn-based PvP battle system. Players can attack, heal, and purchase power-ups using in-game coins generated
-					during the fight. Requires an opponent to start.
+				<h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-6">
+					Types<span className="text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-pink-400">Fight</span>
+				</h1>
+				<p className="text-lg text-gray-400 leading-relaxed max-w-2xl">
+					Configuration options for the Fight minigame. Customize buttons, power-up messages, and error handling.
 				</p>
 			</header>
 
-			{/* --- SECTION 1: INTERFACE DEFINITION --- */}
-			<section className="mb-16">
-				<CodeBlock
-					language="typescript"
-					code={`export interface FightTypes {
+			{/* INTERFACE CODE */}
+			<section className="mb-20">
+				<SectionHeader icon={Terminal} title="Interface Definition" />
+				<div className="border border-white/10 rounded-xl overflow-hidden shadow-2xl">
+					<CodeBlock
+						className="my-0!"
+						language="typescript"
+						code={`export interface FightTypes {
     context: Context;
     opponent: GuildMember;
     embed?: Partial<Pick<Embeds, "color">>;
-    time?: number;
-
-    // Custom Button Labels
     buttons?: {
         hit?: string;
         heal?: string;
@@ -66,198 +151,114 @@ export default function TypesFight() {
         accept?: string;
         deny?: string;
     };
-
-    // Built-in Powerups Config
     powerups?: {
-        doubleDamage?: { label?: string; effectMessage?: string; replyMessage?: string; };
-        shield?: { label?: string; effectMessage?: string; replyMessage?: string; };
-        healBoost?: { label?: string; replyMessage?: string; };
+        doubleDamage?: PowerUpConfig;
+        shield?: PowerUpConfig;
+        healBoost?: PowerUpConfig;
     };
-
-    // Messages
-    opponentsTurnMessage?: string;
-    highHealthMessage?: string;
-    lowHealthMessage?: string;
-    notEnoughtCoins?: string;
-    
-    // Embed States
-    states?: {
-        request?: string;
-        active?: string;
-        won?: string;
-        surrender?: string;
-        deny?: string;
-        timeout?: string;
-    };
+    // ... custom messages
 }`}
-				/>
+					/>
+				</div>
 			</section>
 
-			{/* --- SECTION 2: CORE BATTLE SETTINGS --- */}
-			<section className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-				<div className="rounded-2xl border border-white/5 bg-white/1 overflow-hidden h-full">
-					<div className="px-6 py-4 border-b border-white/5 bg-white/2 flex items-center gap-2">
-						<UserPlus className="w-4 h-4 text-purple-400" />
-						<h3 className="text-sm font-bold text-white">Setup & Players</h3>
+			{/* PROPERTIES GRID */}
+			<section className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-20">
+				{/* Visuals & Core */}
+				<div className="lg:col-span-2 rounded-2xl border border-white/10 bg-[#0d0d0e] overflow-hidden">
+					<div className="px-6 py-4 border-b border-white/5 bg-white/2 flex items-center justify-between">
+						<div className="flex items-center gap-2">
+							<Palette className="w-4 h-4 text-purple-400" />
+							<h3 className="text-sm font-bold text-white">Core Settings</h3>
+						</div>
 					</div>
 					<div className="divide-y divide-white/5">
-						<ConfigRow
-							property="opponent"
+						<PropRow
+							name="context"
+							type="Context"
+							desc="The interaction or message context."
+							required={true}
+							icon={Terminal}
+						/>
+						<PropRow
+							name="opponent"
 							type="GuildMember"
-							desc="The user being challenged. Must be a valid member of the guild."
-							icon={Swords}
+							desc="The target user to challenge."
+							required={true}
+							icon={User}
 						/>
-						<ConfigRow
-							property="buttons"
+						<PropRow
+							name="buttons"
 							type="Object"
-							desc="Labels for the Hit, Heal, Accept, Deny, and Cancel buttons."
-							icon={MousePointer2}
+							desc="Custom labels for all UI buttons (Hit, Heal, Accept, etc)."
+							icon={MousePointerClick}
 						/>
-						<ConfigRow property="time" type="number" desc="Time limit per turn (in ms)." defaultVal="60000ms" />
+						<PropRow name="powerups" type="Object" desc="Customize the text/effects for shop items." icon={Zap} />
+						<PropRow
+							name="time"
+							type="number"
+							desc="Turn duration limit in milliseconds."
+							defaultVal="60000ms"
+							icon={Clock}
+						/>
 					</div>
 				</div>
 
-				<div className="rounded-2xl border border-white/5 bg-white/1 overflow-hidden h-full">
-					<div className="px-6 py-4 border-b border-white/5 bg-white/2 flex items-center gap-2">
-						<Skull className="w-4 h-4 text-purple-400" />
-						<h3 className="text-sm font-bold text-white">Battle Logic Validation</h3>
-					</div>
-					<div className="p-4 text-xs text-gray-500 border-b border-white/5 bg-[#0d0d0e]">
-						These messages prevent illegal moves during the game.
-					</div>
-					<div className="divide-y divide-white/5">
-						<ConfigRow
-							property="opponentsTurnMessage"
-							type="string"
-							desc="Shown when a player tries to act out of turn."
-						/>
-						<ConfigRow
-							property="highHealthMessage"
-							type="string"
-							desc="Shown when trying to heal while HP is too high."
-						/>
-						<ConfigRow
-							property="lowHealthMessage"
-							type="string"
-							desc="Shown when trying to heal without enough HP (if applicable)."
-						/>
-						<ConfigRow property="wrongUserFight" type="string" desc="Shown if a spectator tries to click buttons." />
-					</div>
-				</div>
-			</section>
-
-			{/* --- SECTION 3: POWER UP SYSTEM --- */}
-			<section className="mb-16">
-				<div className="flex items-center gap-3 mb-6">
-					<h2 className="text-xl font-semibold text-white flex items-center gap-2">
-						<Zap className="w-5 h-5 text-yellow-400" />
-						Power-Up System
-					</h2>
-					<div className="h-px flex-1 bg-white/5" />
-				</div>
-
-				<p className="text-sm text-gray-400 mb-6">
-					The Fight game includes an economy system. Players earn coins by hitting/healing and can spend them on special
-					items. You can customize the default items via <code className="text-purple-300">powerups</code> config.
-				</p>
-
-				<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-					<div className="p-4 rounded-xl border border-red-500/20 bg-red-500/5">
-						<div className="flex items-center gap-2 mb-2 font-bold text-red-300 text-sm">
-							<Swords className="w-4 h-4" /> Double Damage
-						</div>
-						<p className="text-xs text-gray-400">Next hit deals 2x damage.</p>
-					</div>
-					<div className="p-4 rounded-xl border border-blue-500/20 bg-blue-500/5">
-						<div className="flex items-center gap-2 mb-2 font-bold text-blue-300 text-sm">
-							<Shield className="w-4 h-4" /> Shield
-						</div>
-						<p className="text-xs text-gray-400">Blocks the next incoming attack completely.</p>
-					</div>
-					<div className="p-4 rounded-xl border border-green-500/20 bg-green-500/5">
-						<div className="flex items-center gap-2 mb-2 font-bold text-green-300 text-sm">
-							<Heart className="w-4 h-4" /> Heal Boost
-						</div>
-						<p className="text-xs text-gray-400">Restores a large amount of HP instantly.</p>
-					</div>
-				</div>
-
-				<div className="rounded-xl border border-white/10 bg-[#0d0d0e] p-6">
-					<h3 className="text-sm font-bold text-white mb-4">Advanced: Custom Power-Up Logic</h3>
-					<p className="text-xs text-gray-500 mb-4">
-						If you want to create your own items, you will need to understand the{" "}
-						<code className="text-purple-300">PlayerData</code> structure passed to your effect function.
+				{/* PowerUp Info */}
+				<div className="rounded-xl border border-white/10 bg-[#0d0d0e] p-6 flex flex-col items-center justify-center text-center">
+					<Zap className="w-12 h-12 text-yellow-500/20 mb-4" />
+					<h3 className="font-bold text-white mb-2">Power-Up Config</h3>
+					<p className="text-xs text-gray-500">
+						You can change the <code>label</code> shown on the button and the <code>replyMessage</code> sent when a user
+						buys an item.
 					</p>
-
-					<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-						{/* PowerUp Interface */}
-						<div>
-							<div className="flex items-center gap-2 text-xs font-mono text-gray-400 mb-2">
-								<Zap className="w-3 h-3" /> PowerUp Interface
-							</div>
-							<CodeBlock
-								language="typescript"
-								code={`interface PowerUp {
-    id: string;
-    label: string;
-    style: ButtonStyle;
-    cost: number;
-    effect: (player: PlayerData, username: string) => string;
-}`}
-							/>
-						</div>
-
-						{/* PlayerData Interface */}
-						<div>
-							<div className="flex items-center gap-2 text-xs font-mono text-gray-400 mb-2">
-								<User className="w-3 h-3" /> PlayerData Interface
-							</div>
-							<CodeBlock
-								language="typescript"
-								code={`interface PlayerData {
-    memberId: string;
-    username: string;
-    health: number;
-    lastAttack: string;
-    coins: number;
-    skipNextTurn: boolean;
-    activeEffects: string[];
-    specialButtons: string[];
-}`}
-							/>
-							<div className="mt-2 text-xs text-gray-500">
-								<span className="text-yellow-400 font-bold">Tip:</span> Use <code>activeEffects</code> to tag players
-								with states (e.g. "poisoned") that your game loop checks.
-							</div>
-						</div>
-					</div>
 				</div>
 			</section>
 
-			{/* --- SECTION 4: GAME STATES --- */}
+			{/* MESSAGES GRID */}
 			<section>
-				<div className="flex items-center gap-3 mb-6">
-					<h2 className="text-xl font-semibold text-white">Embed States</h2>
-					<div className="h-px flex-1 bg-white/5" />
-				</div>
+				<SectionHeader icon={MessageSquare} title="Game Messages" />
+				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+					<StatusCard
+						icon={CheckCircle2}
+						color="green"
+						title="Success"
+						items={[
+							{ key: "states.won", desc: "Sent when opponent reaches 0 HP." },
+							{ key: "states.active", desc: "Message during combat." },
+						]}
+					/>
 
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-					<div className="p-4 rounded-xl bg-white/5 border border-white/5">
-						<div className="font-mono text-sm text-white mb-1">states.request</div>
-						<div className="text-xs text-gray-500">The initial embed showing the "Accept/Deny" buttons.</div>
-					</div>
-					<div className="p-4 rounded-xl bg-white/5 border border-white/5">
-						<div className="font-mono text-sm text-white mb-1">states.active</div>
-						<div className="text-xs text-gray-500">The main battle interface showing HP bars and logs.</div>
-					</div>
-					<div className="p-4 rounded-xl bg-white/5 border border-white/5">
-						<div className="font-mono text-sm text-white mb-1">states.won</div>
-						<div className="text-xs text-gray-500">Shown when HP drops to 0.</div>
-					</div>
-					<div className="p-4 rounded-xl bg-white/5 border border-white/5">
-						<div className="font-mono text-sm text-white mb-1">states.surrender</div>
-						<div className="text-xs text-gray-500">Shown when a player clicks Cancel.</div>
-					</div>
+					<StatusCard
+						icon={XCircle}
+						color="red"
+						title="Endings"
+						items={[
+							{ key: "states.deny", desc: "Opponent rejected challenge." },
+							{ key: "states.surrender", desc: "Player quit the fight." },
+						]}
+					/>
+
+					<StatusCard
+						icon={AlertCircle}
+						color="yellow"
+						title="Validation"
+						items={[
+							{ key: "wrongUserFight", desc: "Someone else clicked buttons." },
+							{ key: "opponentsTurnMessage", desc: "Clicked out of turn." },
+							{ key: "highHealthMessage", desc: "Tried to heal > 80HP." },
+						]}
+					/>
+
+					<StatusCard
+						icon={Clock}
+						color="blue"
+						title="Errors"
+						items={[
+							{ key: "playerAlreadyInFight", desc: "User is busy." },
+							{ key: "failedRequestCardGeneration", desc: "Image gen failed." },
+						]}
+					/>
 				</div>
 			</section>
 		</div>

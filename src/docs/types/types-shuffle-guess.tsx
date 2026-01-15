@@ -1,5 +1,5 @@
 import {
-	Keyboard,
+	Shuffle,
 	Palette,
 	Terminal,
 	MessageSquare,
@@ -7,8 +7,8 @@ import {
 	CheckCircle2,
 	XCircle,
 	Clock,
-	ShieldAlert,
 	Type,
+	MousePointerClick,
 	type LucideIcon,
 } from "lucide-react";
 import { CodeBlock } from "../../components/CodeBlock";
@@ -115,21 +115,21 @@ const StatusCard = ({
 
 // --- MAIN COMPONENT ---
 
-export default function TypesFastType() {
+export default function TypesShuffleGuess() {
 	return (
 		<div className="animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-5xl mx-auto p-4 sm:p-6">
 			{/* HEADER */}
 			<header className="mb-16">
 				<div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-medium mb-6">
-					<Keyboard className="w-3 h-3" />
+					<Shuffle className="w-3 h-3" />
 					Types Reference
 				</div>
 				<h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-6">
 					Types
-					<span className="text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-pink-400">FastType</span>
+					<span className="text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-pink-400">ShuffleGuess</span>
 				</h1>
 				<p className="text-lg text-gray-400 leading-relaxed max-w-2xl">
-					Configuration options for the FastType minigame.
+					Configuration options for the Shuffle Guess minigame.
 				</p>
 			</header>
 
@@ -140,11 +140,14 @@ export default function TypesFastType() {
 					<CodeBlock
 						className="my-0!"
 						language="typescript"
-						code={`export interface FastTypeTypes {
+						code={`export interface ShuffleGuessTypes {
     context: Context;
     embed: Partial<Pick<Embeds, "title" | "color">>;
-    sentence?: string;
-    difficulty?: "easy" | "medium" | "hard";
+    word?: string;
+    buttons?: {
+        reshuffle?: string;
+        cancel?: string;
+    };
     time?: number;
     // ... custom messages
 }`}
@@ -170,13 +173,18 @@ export default function TypesFastType() {
 							required={true}
 							icon={Terminal}
 						/>
-						<PropRow name="sentence" type="string" desc="Custom text to type. Overrides 'difficulty'." icon={Type} />
 						<PropRow
-							name="difficulty"
-							type="'easy' | 'medium' | 'hard'"
-							desc="Complexity of fetched sentence if no custom text is provided."
-							defaultVal="'medium'"
-							icon={AlertCircle}
+							name="word"
+							type="string"
+							desc="Custom word to scramble. If undefined, fetches random word."
+							icon={Type}
+						/>
+						<PropRow
+							name="buttons"
+							type="{ reshuffle: string, cancel: string }"
+							desc="Custom labels for the game buttons."
+							defaultVal='{ reshuffle: "Reshuffle", cancel: "Cancel" }'
+							icon={MousePointerClick}
 						/>
 						<PropRow
 							name="time"
@@ -188,13 +196,12 @@ export default function TypesFastType() {
 					</div>
 				</div>
 
-				{/* Anti-Cheat Info */}
+				{/* API Info */}
 				<div className="rounded-xl border border-white/10 bg-[#0d0d0e] p-6 flex flex-col items-center justify-center text-center">
-					<ShieldAlert className="w-12 h-12 text-red-500/20 mb-4" />
-					<h3 className="font-bold text-white mb-2">Anti-Cheat</h3>
+					<Shuffle className="w-12 h-12 text-purple-500/20 mb-4" />
+					<h3 className="font-bold text-white mb-2">Word Scrambling</h3>
 					<p className="text-xs text-gray-500">
-						The <code>cheatMessage</code> prop allows you to customize the warning sent when a user sends a message
-						without typing first.
+						The game automatically handles shuffling logic. You don't need to provide the scrambled version yourself.
 					</p>
 				</div>
 			</section>
@@ -207,7 +214,7 @@ export default function TypesFastType() {
 						icon={CheckCircle2}
 						color="green"
 						title="Success"
-						items={[{ key: "winMessage", desc: "Sent when typing matches perfectly." }]}
+						items={[{ key: "winMessage", desc: "Sent when player guesses correctly." }]}
 					/>
 
 					<StatusCard
@@ -215,18 +222,8 @@ export default function TypesFastType() {
 						color="red"
 						title="Failure"
 						items={[
-							{ key: "loseMessage", desc: "Sent on typo or mismatch." },
-							{ key: "timeoutMessage", desc: "Sent when time runs out." },
-						]}
-					/>
-
-					<StatusCard
-						icon={ShieldAlert}
-						color="yellow"
-						title="Validation"
-						items={[
-							{ key: "cheatMessage", desc: "Shown if typing event is missing." },
-							{ key: "failedFetchError", desc: "API fetch failure." },
+							{ key: "loseMessage", desc: "Sent when time expires." },
+							{ key: "incorrectMessage", desc: "Sent on wrong guess." },
 						]}
 					/>
 
@@ -234,10 +231,14 @@ export default function TypesFastType() {
 						icon={Clock}
 						color="blue"
 						title="States"
-						items={[
-							{ key: "states.loading", desc: "Shown while fetching text." },
-							{ key: "states.active", desc: "Main game prompt." },
-						]}
+						items={[{ key: "startMessage", desc: "Main prompt embed body." }]}
+					/>
+
+					<StatusCard
+						icon={AlertCircle}
+						color="yellow"
+						title="System"
+						items={[{ key: "othersMessage", desc: "Reply to unauthorized users." }]}
 					/>
 				</div>
 			</section>
