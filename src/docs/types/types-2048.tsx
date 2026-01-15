@@ -197,7 +197,7 @@ export default function Types2048() {
 			</section>
 
 			{/* MESSAGES GRID */}
-			<section>
+			<section className="mb-20">
 				<SectionHeader icon={MessageSquare} title="Message Configuration" />
 				<p className="text-sm text-gray-400 mb-6">
 					All message strings support variables like <code>{"{{score}}"}</code> and <code>{"{{gameTitle}}"}</code>.
@@ -239,6 +239,54 @@ export default function Types2048() {
 							{ key: "errorMessage", desc: "Generic error fallback." },
 						]}
 					/>
+				</div>
+			</section>
+
+			{/* MESSAGE VARIABLES */}
+			<section>
+				<SectionHeader icon={Terminal} title="Message Variables" />
+				<div className="overflow-hidden rounded-xl border border-white/10 bg-[#0d0d0e]">
+					<table className="w-full text-left text-sm text-gray-400">
+						<thead className="bg-white/5 font-bold text-white">
+							<tr>
+								<th className="p-4">Message Key</th>
+								<th className="p-4">Available Variables</th>
+							</tr>
+						</thead>
+						<tbody className="divide-y divide-white/5">
+							<tr>
+								<td className="p-4 font-mono text-purple-300">loadingMessage</td>
+								<td className="p-4">
+									<code className="bg-white/10 px-1 rounded">{"{{gameTitle}}"}</code>
+								</td>
+							</tr>
+							<tr>
+								<td className="p-4 font-mono text-purple-300">activeMessage</td>
+								<td className="p-4">
+									<code className="bg-white/10 px-1 rounded">{"{{gameTitle}}"}</code>{" "}
+									<code className="bg-white/10 px-1 rounded">{"{{score}}"}</code>
+								</td>
+							</tr>
+							<tr>
+								<td className="p-4 font-mono text-purple-300">wonMessage / gameoverMessage</td>
+								<td className="p-4">
+									<code className="bg-white/10 px-1 rounded">{"{{score}}"}</code>
+								</td>
+							</tr>
+							<tr>
+								<td className="p-4 font-mono text-purple-300">quitMessage / timeoutMessage</td>
+								<td className="p-4">
+									<code className="bg-white/10 px-1 rounded">{"{{score}}"}</code>
+								</td>
+							</tr>
+							<tr>
+								<td className="p-4 font-mono text-purple-300">errorMessage</td>
+								<td className="p-4">
+									<code className="bg-white/10 px-1 rounded">{"{{error}}"}</code>
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</section>
 		</div>

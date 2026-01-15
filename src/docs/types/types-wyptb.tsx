@@ -200,7 +200,7 @@ export default function TypesWillYouPressTheButton() {
 			</section>
 
 			{/* MESSAGES GRID */}
-			<section>
+			<section className="mb-20">
 				<SectionHeader icon={MessageSquare} title="Game Messages" />
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
 					<StatusCard
@@ -236,6 +236,49 @@ export default function TypesWillYouPressTheButton() {
 						title="Errors"
 						items={[{ key: "states.error", desc: "API failure fallback." }]}
 					/>
+				</div>
+			</section>
+
+			{/* MESSAGE VARIABLES */}
+			<section>
+				<SectionHeader icon={Terminal} title="Message Variables" />
+				<div className="overflow-hidden rounded-xl border border-white/10 bg-[#0d0d0e]">
+					<table className="w-full text-left text-sm text-gray-400">
+						<thead className="bg-white/5 font-bold text-white">
+							<tr>
+								<th className="p-4">Message Key</th>
+								<th className="p-4">Available Variables</th>
+							</tr>
+						</thead>
+						<tbody className="divide-y divide-white/5">
+							<tr>
+								<td className="p-4 font-mono text-purple-300">states.active / result</td>
+								<td className="p-4">
+									<code className="bg-white/10 px-1 rounded">{"{{gameTitle}}"}</code>{" "}
+									<code className="bg-white/10 px-1 rounded">{"{{question}}"}</code>{" "}
+									<code className="bg-white/10 px-1 rounded">{"{{result}}"}</code>
+								</td>
+							</tr>
+							<tr>
+								<td className="p-4 font-mono text-purple-300">states.result (Outcome)</td>
+								<td className="p-4">
+									<code className="bg-white/10 px-1 rounded">{"{{chose}}"}</code> (replaced by yesPress/noPress)
+								</td>
+							</tr>
+							<tr>
+								<td className="p-4 font-mono text-purple-300">states.timeout</td>
+								<td className="p-4">
+									<code className="bg-white/10 px-1 rounded">{"{{gameTitle}}"}</code>
+								</td>
+							</tr>
+							<tr>
+								<td className="p-4 font-mono text-purple-300">othersMessage</td>
+								<td className="p-4">
+									<code className="bg-white/10 px-1 rounded">{"{{author}}"}</code> (ID)
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</section>
 		</div>

@@ -200,7 +200,7 @@ export default function TypesFastType() {
 			</section>
 
 			{/* MESSAGES GRID */}
-			<section>
+			<section className="mb-20">
 				<SectionHeader icon={MessageSquare} title="Game Messages" />
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
 					<StatusCard
@@ -239,6 +239,58 @@ export default function TypesFastType() {
 							{ key: "states.active", desc: "Main game prompt." },
 						]}
 					/>
+				</div>
+			</section>
+
+			{/* MESSAGE VARIABLES */}
+			<section>
+				<SectionHeader icon={Terminal} title="Message Variables" />
+				<div className="overflow-hidden rounded-xl border border-white/10 bg-[#0d0d0e]">
+					<table className="w-full text-left text-sm text-gray-400">
+						<thead className="bg-white/5 font-bold text-white">
+							<tr>
+								<th className="p-4">Message Key</th>
+								<th className="p-4">Available Variables</th>
+							</tr>
+						</thead>
+						<tbody className="divide-y divide-white/5">
+							<tr>
+								<td className="p-4 font-mono text-purple-300">winMessage</td>
+								<td className="p-4">
+									<code className="bg-white/10 px-1 rounded">{"{{time}}"}</code>{" "}
+									<code className="bg-white/10 px-1 rounded">{"{{wpm}}"}</code>
+								</td>
+							</tr>
+							<tr>
+								<td className="p-4 font-mono text-purple-300">states.active</td>
+								<td className="p-4">
+									<code className="bg-white/10 px-1 rounded">{"{{gameTitle}}"}</code>{" "}
+									<code className="bg-white/10 px-1 rounded">{"{{sentence}}"}</code>
+								</td>
+							</tr>
+							<tr>
+								<td className="p-4 font-mono text-purple-300">states.won</td>
+								<td className="p-4">
+									<code className="bg-white/10 px-1 rounded">{"{{winText}}"}</code>{" "}
+									<code className="bg-white/10 px-1 rounded">{"{{sentence}}"}</code>
+								</td>
+							</tr>
+							<tr>
+								<td className="p-4 font-mono text-purple-300">states.lost</td>
+								<td className="p-4">
+									<code className="bg-white/10 px-1 rounded">{"{{msgLose}}"}</code>{" "}
+									<code className="bg-white/10 px-1 rounded">{"{{sentence}}"}</code>
+								</td>
+							</tr>
+							<tr>
+								<td className="p-4 font-mono text-purple-300">states.timeout / cheat</td>
+								<td className="p-4">
+									<code className="bg-white/10 px-1 rounded">{"{{msgTimeout/Cheat}}"}</code>{" "}
+									<code className="bg-white/10 px-1 rounded">{"{{sentence}}"}</code>
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</section>
 		</div>

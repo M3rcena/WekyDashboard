@@ -216,7 +216,7 @@ export default function TypesFight() {
 			</section>
 
 			{/* MESSAGES GRID */}
-			<section>
+			<section className="mb-20">
 				<SectionHeader icon={MessageSquare} title="Game Messages" />
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
 					<StatusCard
@@ -259,6 +259,42 @@ export default function TypesFight() {
 							{ key: "failedRequestCardGeneration", desc: "Image gen failed." },
 						]}
 					/>
+				</div>
+			</section>
+
+			{/* MESSAGE VARIABLES */}
+			<section>
+				<SectionHeader icon={Terminal} title="Message Variables" />
+				<div className="overflow-hidden rounded-xl border border-white/10 bg-[#0d0d0e]">
+					<table className="w-full text-left text-sm text-gray-400">
+						<thead className="bg-white/5 font-bold text-white">
+							<tr>
+								<th className="p-4">Message Key</th>
+								<th className="p-4">Available Variables</th>
+							</tr>
+						</thead>
+						<tbody className="divide-y divide-white/5">
+							<tr>
+								<td className="p-4 font-mono text-purple-300">powerups.*.replyMessage</td>
+								<td className="p-4">
+									<code className="bg-white/10 px-1 rounded">{"{{username}}"}</code> (Player Name)
+								</td>
+							</tr>
+							<tr>
+								<td className="p-4 font-mono text-purple-300">states.request</td>
+								<td className="p-4">
+									<code className="bg-white/10 px-1 rounded">{"{{challengerMention}}"}</code>{" "}
+									<code className="bg-white/10 px-1 rounded">{"{{opponentMention}}"}</code>
+								</td>
+							</tr>
+							<tr>
+								<td className="p-4 font-mono text-purple-300">states.error.main</td>
+								<td className="p-4">
+									<code className="bg-white/10 px-1 rounded">{"{{error}}"}</code>
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</section>
 		</div>
